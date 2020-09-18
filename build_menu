@@ -7,6 +7,7 @@ PARENT_DIR=`readlink -f ${DIR}/..`;
 
 export PLATFORM_VERSION=8
 BUILD_CROSS_COMPILE=$PARENT_DIR/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+KERNEL_MAKE_ENV="LOCALVERSION=-afaneh92"
 
 # Color
 ON_BLUE=`echo -e "\033[44m"`	# On Blue
@@ -54,8 +55,8 @@ toolchain(){
 
 clean(){
   echo "${GREEN}***** Cleaning in Progress *****${STD}";
-  make ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android clean 
-  make ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android mrproper
+  make $KERNEL_MAKE_ENV ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android clean 
+  make $KERNEL_MAKE_ENV ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android mrproper
   [ -d "out" ] && rm -rf out
   echo "${GREEN}***** Cleaning Done *****${STD}";
   pause 'continue'
@@ -65,8 +66,8 @@ build(){
   variant
   echo "${GREEN}***** Compiling kernel *****${STD}"
   [ ! -d "out" ] && mkdir out
-  make -j$(nproc) -C $(pwd) O=$(pwd)/out ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android afaneh_${VARIANT}_defconfig
-  make -j$(nproc) -C $(pwd) O=$(pwd)/out ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android
+  make -j$(nproc) -C $(pwd) O=$(pwd)/out $KERNEL_MAKE_ENV ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android afaneh_${VARIANT}_defconfig
+  make -j$(nproc) -C $(pwd) O=$(pwd)/out $KERNEL_MAKE_ENV ARCH=arm64 CROSS_COMPILE=$BUILD_CROSS_COMPILE KCFLAGS=-mno-android
 
   [ -e out/arch/arm64/boot/Image.gz ] && cp out/arch/arm64/boot/Image.gz $(pwd)/out/Image.gz
   if [ -e out/arch/arm64/boot/Image.gz-dtb ]; then
