@@ -126,10 +126,12 @@
 #include <linux/android_aid.h>
 
 /* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 #include <net/ncm.h>
 #include <linux/kfifo.h>
 #include <asm/current.h>
 #include <linux/pid.h>
+#endif
 /* END_OF_KNOX_NPA */
 
 static inline int current_has_network(void)
@@ -410,12 +412,14 @@ out_rcu_unlock:
 }
 
 /* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 /** The function is used to check if the ncm feature is enabled or not; if enabled then it calls knox_collect_socket_data function in ncm.c to record all the socket data; **/
 static void knox_collect_metadata(struct socket *sock) {
 	if(check_ncm_flag()) {
 		knox_collect_socket_data(sock);
 	}
 }
+#endif
 /* END_OF_KNOX_NPA */
 
 /*
@@ -448,7 +452,9 @@ int inet_release(struct socket *sock)
 			!(current->flags & PF_EXITING))
 			timeout = sk->sk_lingertime;
 		/* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 		knox_collect_metadata(sock);
+#endif
 		/* END_OF_KNOX_NPA */
 		sock->sk = NULL;
 		sk->sk_prot->close(sk, timeout);
@@ -774,12 +780,14 @@ int inet_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
 	err = sk->sk_prot->sendmsg(sk, msg, size);
 
 	/* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 	if (err >= 0) {
 		if (sock->knox_sent + err > ULLONG_MAX)
 			sock->knox_sent = ULLONG_MAX;
 		else
 			sock->knox_sent = sock->knox_sent + err;
 	}
+#endif
 	/* END_OF_KNOX_NPA */
 
 	return err;
@@ -818,10 +826,12 @@ int inet_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
 	if (err >= 0) {
 		msg->msg_namelen = addr_len;
 		/* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 		if (sock->knox_recv + err > ULLONG_MAX)
 			sock->knox_recv = ULLONG_MAX;
 		else
 			sock->knox_recv = sock->knox_recv + err;
+#endif
 		/* END_OF_KNOX_NPA */
 	}
 	return err;
