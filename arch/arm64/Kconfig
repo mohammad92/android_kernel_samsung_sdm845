@@ -1300,6 +1300,20 @@ config SAMSUNG_TAC
 	bool "SAMSUNG TACTICAL EDITION (TAC)"
 	default n
 
+config SEC_STARQLTE_PROJECT
+	depends on ARCH_SDM845
+	default n
+	bool "Samsung STARQLTE Project"
+	help
+	  Support for Samsung STARQLTE Project
+
+config MACH_STARQLTE_SINGLE
+	depends on SEC_STARQLTE_PROJECT
+	default n
+	bool "Samsung STARQLTE SQ"
+	help
+	  Support for Samsung STARQLTE USA SQ device.
+
 config SEC_STAR2QLTE_PROJECT
 	depends on ARCH_SDM845
 	default n
