@@ -3,7 +3,7 @@
 #
 
 config TOUCHSCREEN_FTS
-	tristate "STMicroelectronics i2c multitouch touchscreen with FingerTipS"
+	bool "STMicroelectronics i2c multitouch touchscreen with FingerTipS"
 	depends on I2C
 	help
 		Say Y here to enable STMicroelectronics touchscreen support.
