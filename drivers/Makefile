@@ -226,7 +226,5 @@ ifeq ($(CONFIG_GATOR), y)
 	obj-$(CONFIG_GATOR)				+= gator/
 endif
 
-obj-y				+= kperfmon/
-
 #TZIC
 obj-y  += security/samsung/tzic/
