@@ -1078,7 +1078,9 @@ struct dp_panel *dp_panel_get(struct dp_panel_in *in)
 	panel->aux = in->aux;
 	panel->catalog = in->catalog;
 	panel->link = in->link;
+#ifdef CONFIG_SEC_DISPLAYPORT
 	panel->parser = in->parser;
+#endif
 
 	dp_panel = &panel->dp_panel;
 #ifndef CONFIG_SEC_DISPLAYPORT
